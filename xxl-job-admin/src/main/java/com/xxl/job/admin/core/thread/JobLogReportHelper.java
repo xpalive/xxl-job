@@ -70,6 +70,7 @@ public class JobLogReportHelper {
 
                             Map<String, Object> triggerCountMap = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().findLogReport(todayFrom, todayTo);
                             if (triggerCountMap!=null && triggerCountMap.size()>0) {
+                                // 这里会有兼容问题,如果是其他数据库,比如达梦,oracle则字段会变成大写
                                 int triggerDayCount = triggerCountMap.containsKey("triggerDayCount")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCount"))):0;
                                 int triggerDayCountRunning = triggerCountMap.containsKey("triggerDayCountRunning")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountRunning"))):0;
                                 int triggerDayCountSuc = triggerCountMap.containsKey("triggerDayCountSuc")?Integer.valueOf(String.valueOf(triggerCountMap.get("triggerDayCountSuc"))):0;
@@ -81,6 +82,7 @@ public class JobLogReportHelper {
                             }
 
                             // do refresh
+                            // 先更新,如果更新失败则新增
                             int ret = XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().update(xxlJobLogReport);
                             if (ret < 1) {
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobLogReportDao().save(xxlJobLogReport);
