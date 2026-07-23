@@ -89,6 +89,9 @@ public class JobCompleteHelper {
 								jobLog.setHandleMsg( I18nUtil.getString("joblog_lost_fail") );
 
 								XxlJobCompleter.updateHandleInfoAndFinish(jobLog);
+
+								// 兜底路径也推送通知（失联任务被主动标记失败）
+								JobDingtalkNotifyHelper.getInstance().pushCompleteEvent(logId);
 							}
 
 						}
@@ -175,6 +178,9 @@ public class JobCompleteHelper {
 		log.setHandleCode(handleCallbackParam.getHandleCode());
 		log.setHandleMsg(handleMsg.toString());
 		XxlJobCompleter.updateHandleInfoAndFinish(log);
+
+		// 推送完成事件到钉钉通知线程（非阻塞、失败不影响主流程）
+		JobDingtalkNotifyHelper.getInstance().pushCompleteEvent(log.getId());
 
 		return ReturnT.SUCCESS;
 	}

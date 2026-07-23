@@ -42,14 +42,20 @@ public class XxlJobScheduler  {
         // start-schedule  ( depend on JobTriggerPoolHelper )
         JobScheduleHelper.getInstance().start();
 
+        // 启动钉钉通知线程（依赖 JobCompleteHelper 推送事件）
+        JobDingtalkNotifyHelper.getInstance().start();
+
         logger.info(">>>>>>>>> init xxl-job admin success.");
     }
 
-    
+
     public void destroy() throws Exception {
 
         // stop-schedule
         JobScheduleHelper.getInstance().toStop();
+
+        // 停止钉钉通知线程
+        JobDingtalkNotifyHelper.getInstance().toStop();
 
         // admin log report stop
         JobLogReportHelper.getInstance().toStop();
